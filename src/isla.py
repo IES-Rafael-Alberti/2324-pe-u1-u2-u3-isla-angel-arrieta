@@ -261,7 +261,7 @@ def procesar_movimiento(posicion: tuple, mapa: list) -> int:
     return resultado
 
 
-def simbolo_celda(celda) -> str:
+def simbolo_celda(celda: str) -> str:
     """Retorna el símbolo a pintar en la celda"""
     if celda != CELDA_VACIA:
         return DESCONOCIDO
