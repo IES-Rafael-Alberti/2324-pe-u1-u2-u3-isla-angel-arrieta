@@ -99,14 +99,15 @@ VACIA_ENCONTRADA = 5
 MOVIMIENTOS_NO_PERMITIDO = [MOVIMIENTO_INVALIDO, TRAMPA_ENCONTRADA]
 
 # Movimientos permitidos
-SALIR = "q"
-MOVIMIENTOS = {"u": (-1, 0), "d": (1, 0), "l": (0, -1), "r": (0, 1), SALIR: (0, 0)}
+SALIR = (0, 0)
+MOVIMIENTOS = {"u": (-1, 0), "d": (1, 0), "l": (0, -1), "r": (0, 1), "q": (0, 0)}
 
 # Constantes para las posiciones
 FILAS = 0
 COLUMNAS = 1
 
-# Código oculto del programador para realizar alguna acción que el usuario no sabe que existe. Si encuentras para qué se utiliza igual te sirve en tu aventura...
+# Código oculto del programador para realizar alguna acción que el usuario no sabe que existe.
+# Si encuentras para qué se utiliza igual te sirve en tu aventura...
 CODIGO_OCULTO_PROGRAMADOR = "s"
 
 
@@ -149,7 +150,8 @@ def generar_mapa() -> list:
     mapa[tesoro_x][tesoro_y] = CELDA_TESORO
 
     # Colocar pistas y trampas
-    ???
+    for i in range(0, DIMENSIONES):
+        for j in range(0, DIMENSIONES):
             if mapa[i][j] != CELDA_TESORO:
                 # Decidir aleatoriamente si colocar una pista, una trampa o vacia.
                 opciones = [genera_pista((tesoro_x, tesoro_y), (i, j))]
@@ -160,7 +162,7 @@ def generar_mapa() -> list:
     return mapa
 
 
-def genera_pista():
+def genera_pista(posicion_tesoro: tuple, posicion: tuple):
     """
     Genera una pista para el mapa, en función de donde se encuentre el tesoro.
     Decidirá si la pista es sobre la fila o la columna basada en la aleatoriedad. Ademas tiene en cuenta que
@@ -210,16 +212,16 @@ def pedir_movimiento(mapa: list) -> str:
     """
     entrada_correcta = False
 
-    entrada = int(input("Ingresa tu movimiento (formato: 'u:arriba', 'd:abajo', 'l:izquierda', 'r:derecha', q:salir): "))
+    entrada = str(input("Ingresa tu movimiento (formato: 'u:arriba', 'd:abajo', 'l:izquierda', 'r:derecha', 'q':salir): "))
     while not entrada_correcta:
-        if entrada in MOVIMIENTOS:
+        if entrada.lower() in MOVIMIENTOS:
             entrada_correcta = True
-        elif entrada == CODIGO_OCULTO_PROGRAMADOR:
+        elif entrada.lower() == CODIGO_OCULTO_PROGRAMADOR:
             imprimir_mapa(mapa)
 
         if not entrada_correcta:
-            entrada = int(input(
-                "Ingresa tu movimiento (formato: 'u:arriba', 'd:abajo', 'l:izquierda', 'r:derecha', q:salir): "))
+            entrada = str(input(
+                "Ingresa tu movimiento (formato: 'u:arriba', 'd:abajo', 'l:izquierda', 'r:derecha', 'q':salir): "))
 
     return entrada
 
@@ -233,7 +235,7 @@ def obtener_nueva_posicion(posicion_jugador: tuple, movimiento: str) -> tuple:
     :return: La nueva posición del jugador.
     """
 
-    direccion = MOVIMIENTOS(movimiento)
+    direccion = MOVIMIENTOS.get(movimiento)
     nueva_posicion = (posicion_jugador[FILAS] + direccion[FILAS], posicion_jugador[COLUMNAS] + direccion[COLUMNAS])
     return nueva_posicion
 
@@ -261,16 +263,17 @@ def procesar_movimiento(posicion: tuple, mapa: list) -> int:
 
 def simbolo_celda(celda):
     """Retorna el símbolo a pintar en la celda"""
-    if celda != CELDA_VACIA
+    if celda != CELDA_VACIA:
         return DESCONOCIDO
-    else
+    else:
         return CELDA_VACIA 
 
 
 def imprimir_mapa_oculto(mapa: list):
     """Imprime el mapa sin revelar el tesoro ni las trampas."""
+    print("  1 2 3 4 5")
     for fila in mapa:
-        print(" ".join([simbolo_celda(celda) for celda in fila]))
+        print(f'{mapa.index(fila)+1} {" ".join([simbolo_celda(celda) for celda in fila])}')
 
 
 def imprimir_mapa(mapa: list):
@@ -278,8 +281,9 @@ def imprimir_mapa(mapa: list):
     Imprime el mapa.
     :param mapa: El mapa a imprimir.
     """
+    print("    1    2    3    4    5")
     for fila in mapa:
-        print fila
+        print(f"{mapa.index(fila)+1} {fila}")
 
 
 def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa: list):
@@ -292,8 +296,6 @@ def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa
     """
     if resultado == MOVIMIENTO_INVALIDO:
         print("Movimiento inválido. Estás intentando salir del mapa.")
-    elif resultado == TESORO_ENCONTRADO:
-        print("¡Has encontrado el tesoro y ganado el juego!")
     elif resultado == TRAMPA_ENCONTRADA:
         print("Es una trampa. Intenta de nuevo.")
     elif resultado == PISTA_ENCONTRADA:
@@ -305,7 +307,7 @@ def muestra_estado_mapa(mapa, posicion_jugador):
     """Muestra el mapa y la posición del jugador."""
 
     imprimir_mapa_oculto(mapa)
-    print(f"Tu posición es {posicion_jugador}")
+    print(f"Tu posición es ({posicion_jugador[0] + 1}, {posicion_jugador[1] + 1})")
 
 
 def jugar():
@@ -318,21 +320,33 @@ def jugar():
     movimiento = pedir_movimiento(mapa)
     resultado_movimiento = None
     # Loop principal del juego. El juego termina cuando el jugador realizar movimiento SALIR.
-    while movimiento != SALIR and resultado_movimiento == TESORO_ENCONTRADO:
+    while movimiento != "q" or resultado_movimiento != TESORO_ENCONTRADO:
 
         # Obtener la nueva posición del jugador y procesar el movimiento
-        nueva_posicion = obtener_nueva_posicion(posicion_jugador)
-        resultado_movimiento = procesar_movimiento(nueva_posicion, mapa)
+        if movimiento == "q" or resultado_movimiento == TESORO_ENCONTRADO:
+            movimiento = "q"
+            resultado_movimiento = TESORO_ENCONTRADO
+            print("Saliendo...")
+        else:
+            nueva_posicion = obtener_nueva_posicion(posicion_jugador, movimiento)
+            resultado_movimiento = procesar_movimiento(nueva_posicion, mapa)
+            muestra_resultado_del_movimiento(resultado_movimiento, nueva_posicion, mapa)
+            if resultado_movimiento != TESORO_ENCONTRADO:
+                if movimiento != "q":
+                    # Actualizar la posición del jugador si el movimiento es válido
+                    if resultado_movimiento not in MOVIMIENTOS_NO_PERMITIDO:
+                        posicion_jugador = nueva_posicion
 
-        muestra_resultado_del_movimiento(resultado_movimiento, nueva_posicion, mapa)
-
-        if resultado_movimiento != TESORO_ENCONTRADO:
-            # Actualizar la posición del jugador si el movimiento es válido
-            if resultado_movimiento not in MOVIMIENTOS_NO_PERMITIDO:
-                posicion_jugador = nueva_posicion
-
-            muestra_estado_mapa(mapa, posicion_jugador)
-            movimiento = pedir_movimiento(mapa)
+                    muestra_estado_mapa(mapa, posicion_jugador)
+                    movimiento = pedir_movimiento(mapa)
+                else:
+                    movimiento = "q"
+                    print("Te has rendido")
+                    imprimir_mapa(mapa)
+            else:
+                resultado_movimiento = TESORO_ENCONTRADO
+                print("¡Has encontrado el tesoro y ganado el juego!")
+                imprimir_mapa(mapa)
 
 
 if __name__ == "__main__":
