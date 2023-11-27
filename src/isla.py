@@ -158,7 +158,7 @@ def generar_mapa() -> list:
         for j in range(0, DIMENSIONES):
             if mapa[i][j] != CELDA_TESORO:
                 if (i, j) != (2, 2):
-                    # Decidir aleatoriamente si colocar una pista, una trampa o vacia.
+                    # Decidir aleatoriamente si colocar una pista, una trampa o vacía.
                     opciones = [genera_pista((tesoro_x, tesoro_y), (i, j))]
                     opciones += [CELDA_TRAMPA]
                     opciones += [CELDA_VACIA]
