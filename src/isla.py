@@ -290,9 +290,11 @@ def imprimir_mapa_oculto(mapa: list):
 
     :param mapa: El mapa a imprimir.
     """
-    print("  1 2 3 4 5")
+    print("   1 2 3 4 5")
+    print("  -----------")
     for fila in mapa:
-        print(f'{mapa.index(fila)+1} {" ".join([simbolo_celda(celda) for celda in fila])}')
+        print(f'{mapa.index(fila)+1} |{" ".join([simbolo_celda(celda) for celda in fila])}|')
+    print("  -----------")
 
 
 def imprimir_mapa(mapa: list):
@@ -301,9 +303,11 @@ def imprimir_mapa(mapa: list):
 
     :param mapa: El mapa a imprimir.
     """
-    print("    1    2    3    4    5")
+    print("     1    2    3    4    5")
+    print("   -------------------------")
     for fila in mapa:
-        print(f"{mapa.index(fila)+1} {fila}")
+        print(f"{mapa.index(fila)+1} |{fila}|")
+    print("   -------------------------")
 
 
 def muestra_resultado_del_movimiento(resultado: int, nueva_posicion: tuple, mapa: list):
