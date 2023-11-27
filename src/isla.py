@@ -40,7 +40,7 @@ CORRECCIÓN DE ERRORES O PROBLEMAS:
 
 * 1: El juego no se puede jugar()
 
-* 2: Acaba la función generar_mapa() sino no vas a poder hacer nada.
+* 2: Acaba la función generar_mapa() si no, no vas a poder hacer nada.
 
 * 3: Existen errores típicos de no declarar correctamente las funciones.
 
@@ -162,7 +162,7 @@ def generar_mapa() -> list:
     return mapa
 
 
-def genera_pista(posicion_tesoro: tuple, posicion: tuple):
+def genera_pista(posicion_tesoro: tuple, posicion: tuple) -> str:
     """
     Genera una pista para el mapa, en función de donde se encuentre el tesoro.
     Decidirá si la pista es sobre la fila o la columna basada en la aleatoriedad. Ademas tiene en cuenta que
@@ -178,7 +178,7 @@ def genera_pista(posicion_tesoro: tuple, posicion: tuple):
         return genera_pista_columnas(posicion_tesoro, posicion) or genera_pista_filas(posicion_tesoro, posicion)
 
 
-def genera_pista_filas(posicion_tesoro: tuple, posicion: tuple):
+def genera_pista_filas(posicion_tesoro: tuple, posicion: tuple) -> str:
     """Genera una pista basada en la comparación de filas.
     :param posicion_tesoro: La posición del tesoro.
     :param posicion: La posición para la que se genera la pista.
@@ -192,7 +192,7 @@ def genera_pista_filas(posicion_tesoro: tuple, posicion: tuple):
     return ""
 
 
-def genera_pista_columnas(posicion_tesoro: tuple, posicion: tuple):
+def genera_pista_columnas(posicion_tesoro: tuple, posicion: tuple) -> str:
     """Genera una pista basada en la comparación de columnas.
     :param posicion_tesoro: La posición del tesoro.
     :param posicion: La posición para la que se genera la pista.
@@ -261,7 +261,7 @@ def procesar_movimiento(posicion: tuple, mapa: list) -> int:
     return resultado
 
 
-def simbolo_celda(celda):
+def simbolo_celda(celda) -> str:
     """Retorna el símbolo a pintar en la celda"""
     if celda != CELDA_VACIA:
         return DESCONOCIDO
